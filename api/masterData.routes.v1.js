@@ -1,20 +1,16 @@
 var express = require('express');
 var routes = express.Router();
 var mongodb = require('../config/mongo.db');
-
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const DataSchema = new Schema({},{strict : false});
-const Data = mongoose.model('data', DataSchema);
+var MasterData = require('../model/master-data.model');
 
 var Inverter = require('../model/inverter.model');
 
 //
 // Geef een lijst van alle solar data.  
 //
-routes.get('/solar-panels', function(req, res) {
+routes.get('/master-data', function(req, res) {
     res.contentType('application/json');
-    Data.find({})
+    MasterData.find({})
         .then((data) => {
             // console.log(data);
             res.status(200).json(data);
@@ -26,9 +22,9 @@ routes.get('/solar-panels', function(req, res) {
 // Retourneer één specifieke game. Hier maken we gebruik van URL parameters.
 // Vorm van de URL: http://hostname:3000/api/v1/data/23
 //
-routes.get('/solar-panels/:id', function(req, res) {
+routes.get('/master-data/:id', function(req, res) {
     res.contentType('application/json');
-    Data.findById(req.params.id)
+    MasterData.findById(req.params.id)
         .then((data) => {
             // console.log(games);
             res.status(200).json(data);
@@ -38,29 +34,20 @@ routes.get('/solar-panels/:id', function(req, res) {
 
 //post 
 //geen schema slaat alles op wat er in de body staat van de post
-routes.post('/solar-panels/:SN', function(req, res) {
-    var new_data = new Data(req.body);
-    console.log(req.params);
-    var currentSN = req.params.SN;
-    Inverter.findOne({ SN: currentSN })
-    .then(inverter => {
-        console.log(inverter.SN);
-        inverter.solarpanels.push(new_data)
-        new_data.save()
-        .then(() => {
-            inverter.save()
-                .then(res.send("opgeslagen"))
-                .catch(error => console.log(error));
-            
-        })
-        .catch(error => console.log(error));
-});
+routes.post('/master-data', function(req, res) {
+    var new_data = new MasterData(req.body);
+    new_data.save(
+
+    function(err, result) {
+        if (err) return res.status(401).json(error);
+        res.send(result);
+    });
 });
 
-routes.delete('/solar-panels/:id', function(req, res) {
+routes.delete('/master-data/:id', function(req, res) {
     var id = req.params.id;
 
-    Data.findById(id)
+    MasterData.findById(id)
         .then(data => { 
             data.remove();
             res.status(200).send("data verwijderd");
