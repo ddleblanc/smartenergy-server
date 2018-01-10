@@ -18,16 +18,30 @@ routes.get('/inverters', function (req, res) {
         })
         .catch((error) => {
         res.status(400).json(error);
-});
+        });
 });
 
 routes.get('/inverters/:id', function (req, res) {
     res.contentType('application/json');
-    Inverter.findOne({_id: req.params._id},function(err,result){
-        res.status(200).json(result);
-    });
+    Inverter.findById(req.params.id)
+    .then((inverter) => {
+        // console.log(games);
+        res.status(200).json(inverter);
+    })
+    .catch((error) => res.status(401).json(error));
 });
 
+routes.get('/inverters/:id/solar-panels', function (req, res) {
+    res.contentType('application/json');
+    Inverter.findById(req.params.id)
+        //.populate("solarpanels") werkt niet want dan moet mongo een refrence hebben
+        .then((inverter) => {
+            solarpanels = inverter.solarpanels;
+            console.log(inverter);
+            res.status(200).json(solarpanels);
+        })
+        .catch((error) => res.status(401).json(error));
+});
 
 routes.post('/inverters', function (req, res) {
     res.contentType('application/json');
