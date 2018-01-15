@@ -33,15 +33,21 @@ routes.get('/master-data/:id', function(req, res) {
 });
 
 //post 
-//geen schema slaat alles op wat er in de body staat van de post
-routes.post('/master-data', function(req, res) {
-    var new_data = new MasterData(req.body);
-    new_data.save(
-
-    function(err, result) {
-        if (err) return res.status(401).json(error);
-        res.send(result);
-    });
+routes.post('/master-data/:SN', function(req, res) {
+    var new_data = new MasterData({name : req.body.name, time : req.body.time, energy : req.body.energy, raw : req.body.raw});
+    var currentSN = req.params.SN;
+    Inverter.findOne({ SN: currentSN })
+    .then(inverter => {
+        console.log(inverter.SN);
+        inverter.masterData.push(new_data)
+        new_data.save()
+        .then(() => {
+            inverter.save()
+                .then(res.send("opgeslagen"))
+                .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
+});
 });
 
 routes.delete('/master-data/:id', function(req, res) {
