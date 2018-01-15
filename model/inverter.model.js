@@ -37,6 +37,9 @@ const InverterSchema = new Schema({
     alerts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'alert'
+    }],
+    solarpanels: [{
+        type: mongoose.Schema.Types.ObjectId
     }]
 }, {
     timestamps: true
