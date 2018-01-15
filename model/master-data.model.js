@@ -2,19 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const MasterDataSchema = new Schema({
-    Name: {
+    name: {
         type: String,
         required: true
     },
-    Time: {
+    time: {
         type: Date,
         required: true
     },
-    Energy: {
-        type: Number,
+    energy: {
+        type: String,
         required: true
     },
-    Raw: [{
+    raw: [{
         type: mongoose.Schema.Types.ObjectId
     }]
     });

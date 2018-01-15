@@ -9,6 +9,7 @@ var mongodb = require('./config/mongo.db');
 
 var inverterroutes_v1 = require('./api/inverter.routes.v1');
 var solarDataroutes_v1 = require('./api/solarData.routes.v1');
+var masterDataroutes_v1 = require('./api/masterData.routes.v1');
 
 // var auth_routes_v1 = require('./api/authentication.routes.v1');
 var config = require('./config/env/env');
@@ -68,6 +69,7 @@ app.use(function (req, res, next) {
 // app.use('/api/v1', auth_routes_v1);
 app.use('/api/v1', inverterroutes_v1);
 app.use('/api/v1', solarDataroutes_v1);
+app.use('/api/v1', masterDataroutes_v1);
 
 // Errorhandler voor express-jwt errors
 // Wordt uitgevoerd wanneer err != null; anders door naar next().

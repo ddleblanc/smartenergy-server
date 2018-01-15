@@ -45,7 +45,7 @@ routes.post('/solar-panels/:SN', function(req, res) {
     Inverter.findOne({ SN: currentSN })
     .then(inverter => {
         console.log(inverter.SN);
-        inverter.solarpanels.push(new_data)
+        inverter.rawData.push(new_data)
         new_data.save()
         .then(() => {
             inverter.save()

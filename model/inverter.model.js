@@ -38,8 +38,12 @@ const InverterSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'alert'
     }],
-    solarpanels: [{
+    rawData: [{
         type: mongoose.Schema.Types.ObjectId
+    }],
+    masterData: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'masterData'
     }]
 }, {
     timestamps: true
