@@ -36,7 +36,19 @@ routes.get('/inverters/:id/solar-panels', function (req, res) {
     Inverter.findById(req.params.id)
         //.populate("solarpanels") werkt niet want dan moet mongo een refrence hebben
         .then((inverter) => {
-            solarpanels = inverter.solarpanels;
+            solarpanels = inverter.rawData;
+            console.log(inverter);
+            res.status(200).json(solarpanels);
+        })
+        .catch((error) => res.status(401).json(error));
+});
+
+routes.get('/inverters/:id/solar-panels', function (req, res) {
+    res.contentType('application/json');
+    Inverter.findById(req.params.id)
+        //.populate("solarpanels") werkt niet want dan moet mongo een refrence hebben
+        .then((inverter) => {
+            solarpanels = inverter.rawData;
             console.log(inverter);
             res.status(200).json(solarpanels);
         })
