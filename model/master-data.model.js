@@ -11,7 +11,7 @@ const MasterDataSchema = new Schema({
         required: true
     },
     energy: {
-        type: String,
+        type: Number,
         required: true
     },
     raw: [{
