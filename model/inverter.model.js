@@ -48,8 +48,4 @@ const InverterSchema = new Schema({
 
 const Inverter = mongoose.model('inverter', InverterSchema);
 
-
-// const inverter = new Inverter({
-// }).save();
-
 module.exports = Inverter;

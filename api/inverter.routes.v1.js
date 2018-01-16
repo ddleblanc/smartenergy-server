@@ -25,7 +25,7 @@ routes.get('/inverters/:id', function (req, res) {
     res.contentType('application/json');
     Inverter.findById(req.params.id)
     .then((inverter) => {
-        // console.log(games);
+        // console.log(inverters);
         res.status(200).json(inverter);
     })
     .catch((error) => res.status(401).json(error));
