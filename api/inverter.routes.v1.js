@@ -45,6 +45,31 @@ routes.get('/inverters/export', function (req, res) {
         .catch((error) => res.status(401).json(error));
 });
 
+routes.get('/inverters/total/:month', function (req, res) {
+    res.contentType('application/json');
+    Inverter.find()
+        .populate("masterData")
+        .then(inverters => {
+            exportJson = []
+            console.log("inverters : ")
+            console.log(inverters);
+            inverters.forEach(inverter => {
+                console.log('inverter')
+                console.log(inverter);
+                inverter.masterData.forEach(masterdata => {
+                    console.log("masterdata : ")
+                    console.log(masterdata);
+                    if(  (masterdata.time.getMonth() + 1) == req.params.month){
+                    newdata = { "time": masterdata.time, "SN": inverter.SN, "energy": masterdata.energy }
+                    exportJson.push(newdata);
+                    }
+                })
+            })
+            res.status(200).json(exportJson)
+        })
+        .catch((error) => res.status(401).json(error));
+});
+
 routes.get('/inverters/:id', function (req, res) {
     res.contentType('application/json');
     Inverter.findById(req.params.id)
