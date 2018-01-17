@@ -40,6 +40,37 @@ routes.get('/locations/:id', function(req, res) {
         });
     });
 
+    routes.get('/locations/:id/inverters', function (req, res) {
+        res.contentType('application/json');
+        Location.findById(req.params.id)
+            .then((location) => {
+                inverters = location.inverters;
+                console.log(location);
+                res.status(200).json(inverters);
+            })
+            .catch((error) => res.status(401).json(error));
+    });
+
+    routes.put('/locations/:id', function(req, res) {
+        
+        res.contentType('application/json');
+        var id = req.params.id;
+    
+        var update = { 
+            "name" : req.body.name, 
+            "adress" : req.body.adress,
+            "inverters": req.body.inverters
+        };
+        Location.findById(id)
+            .then( location => {
+                location.set(update);
+                location.save();
+                res.status(200).json(location);
+                
+            })
+            .catch((error) => res.status(401).json(error));
+    });
+
 routes.delete('/locations/:id', function(req, res) {
     var id = req.params.id;
     
