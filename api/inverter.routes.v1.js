@@ -5,6 +5,7 @@ var express = require('express');
 var routes = express.Router();
 var mongodb = require('../config/mongo.db');
 var Inverter = require('../model/inverter.model');
+var Location = require('../model/location.model');
 var MasterData = require('../model/master-data.model');
 
 //
@@ -142,7 +143,8 @@ routes.get('/inverters/:id/energy/:month', function (req, res) {
 
 routes.post('/inverters', function (req, res) {
     res.contentType('application/json');
-    Inverter.create({
+    locationID = req.body.locationID;
+    newInverter = new Inverter({
         SN: req.body.SN,
         DeviceName: req.body.DeviceName,
         Online: req.body.Online,
@@ -150,13 +152,21 @@ routes.post('/inverters', function (req, res) {
         DeviceModel: req.body.DeviceModel,
         DisplaySoftwareVersion: req.body.DisplaySoftwareVersion,
         MasterControlSoftwareVersion: req.body.MasterControlSoftwareVersion,
-        SlaveControlVersion: req.body.SlaveControlVersion},
+        SlaveControlVersion: req.body.SlaveControlVersion})
 
-
-        function(err, result) {
-            if (err) return res.status(401).json(error);
-            res.send(result);
-        });
+        Location.findById(locationID)
+        .then(location => {
+            location.inverters.push(newInverter)
+            newInverter.save()
+            .then(() => {
+                location.save()
+                .then(res.send("opgeslagen"))
+                .catch(error => console.log(error));
+            })
+            .catch((error) => res.status(401).json(error))
+        })
+        .catch((error) => res.status(401).json(error))
+        
 });
 
 routes.put('/inverters/:id', function (req, res) {
