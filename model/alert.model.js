@@ -22,7 +22,4 @@ const AlertSchema = new Schema({
 const Alert = mongoose.model('alert', AlertSchema);
 
 
-// const alert = new Alert({
-// }).save();
-
 module.exports = Alert;
