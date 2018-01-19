@@ -32,12 +32,11 @@ routes.get('/locations/:id', function(req, res) {
     });
 
     routes.post('/locations', function(req, res) {
-        var new_location = new Location(req.body);
-        new_location.save(function(err, task) {
-          if (err)
-            res.send(err);
-            res.json(task);
-        });
+        console.log(req.body.location);
+        var new_location = new Location(req.body.location);
+        new_location.save()
+        .then(res.send("opgeslagen"))
+        .catch(error => console.log(error));
     });
 
     routes.get('/locations/:id/inverters', function (req, res) {
@@ -52,14 +51,14 @@ routes.get('/locations/:id', function(req, res) {
     });
 
     routes.put('/locations/:id', function(req, res) {
-        
+        console.log(req.body);
         res.contentType('application/json');
         var id = req.params.id;
     
         var update = { 
-            "name" : req.body.name, 
-            "adress" : req.body.adress,
-            "inverters": req.body.inverters
+            "name" : req.body.location.name, 
+            "adress" : req.body.location.adress,
+            "inverters": req.body.location.inverters
         };
         Location.findById(id)
             .then( location => {

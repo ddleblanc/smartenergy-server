@@ -143,19 +143,20 @@ routes.get('/inverters/:id/energy/:month', function (req, res) {
 
 routes.post('/inverters', function (req, res) {
     res.contentType('application/json');
-    locationID = req.body.locationID;
+    console.log(req.body.inverter);
     newInverter = new Inverter({
-        SN: req.body.SN,
-        DeviceName: req.body.DeviceName,
-        Online: req.body.Online,
-        Location: req.body.Location,
-        DeviceModel: req.body.DeviceModel,
-        DisplaySoftwareVersion: req.body.DisplaySoftwareVersion,
-        MasterControlSoftwareVersion: req.body.MasterControlSoftwareVersion,
-        SlaveControlVersion: req.body.SlaveControlVersion})
+        SN: req.body.inverter.SN,
+        DeviceName: req.body.inverter.DeviceName,
+        Online: req.body.inverter.Online,
+        Location: req.body.inverter.Location,
+        DeviceModel: req.body.inverter.DeviceModel,
+        DisplaySoftwareVersion: req.body.inverter.DisplaySoftwareVersion,
+        MasterControlSoftwareVersion: req.body.inverter.MasterControlSoftwareVersion,
+        SlaveControlVersion: req.body.inverter.SlaveControlVersion})
 
-        Location.findById(locationID)
+        Location.findById(req.body.inverter.locationID)
         .then(location => {
+            console.log(location);
             location.inverters.push(newInverter)
             newInverter.save()
             .then(() => {
@@ -169,12 +170,43 @@ routes.post('/inverters', function (req, res) {
         
 });
 
-routes.put('/inverters/:id', function (req, res) {
+routes.put('/inverters/:id', function(req, res) {
+    console.log(req.body);
+    res.contentType('application/json');
+    var id = req.params.id;
 
+    var update = { 
+        "SN": req.body.inverter.SN,
+        "DeviceName": req.body.inverter.DeviceName,
+        "Online": req.body.inverter.Online,
+        "Location": req.body.inverter.Location,
+        "DeviceModel": req.body.inverter.DeviceModel,
+        "DisplaySoftwareVersion": req.body.inverter.DisplaySoftwareVersion,
+        "MasterControlSoftwareVersion": req.body.inverter.MasterControlSoftwareVersion,
+        "SlaveControlVersion": req.body.inverter.SlaveControlVersion
+    };
+    Inverter.findById(id)
+        .then( inverter => {
+            inverter.set(update);
+            inverter.save();
+            res.status(200).json(inverter);
+            
+        })
+        .catch((error) => res.status(401).json(error));
 });
 
-routes.delete('/inverters/:id', function (req, res) {
+routes.delete('/inverters/:id', function(req, res) {
+var id = req.params.id;
 
+Inverter.findById(id)
+    .then(inverter => { 
+        inverter.remove()
+        .then(() => res.status(200).send("Inverter verwijderd"))
+        .catch(error => res.status(401).json(error))
+        
+    })
+    .catch(error => res.status(401).json(error));
 });
+
 
 module.exports = routes;
