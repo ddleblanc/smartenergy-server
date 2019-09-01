@@ -37,6 +37,13 @@ const InverterSchema = new Schema({
     alerts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'alert'
+    }],
+    rawData: [{
+        type: mongoose.Schema.Types.ObjectId
+    }],
+    masterData: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'masterData'
     }]
 }, {
     timestamps: true
@@ -44,9 +51,5 @@ const InverterSchema = new Schema({
 
 
 const Inverter = mongoose.model('inverter', InverterSchema);
-
-
-// const inverter = new Inverter({
-// }).save();
 
 module.exports = Inverter;
